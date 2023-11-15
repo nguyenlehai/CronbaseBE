@@ -78,7 +78,7 @@ export class UserRepository {
       take: limit,
       skip: offset,
       where: {},
-      order: { createdAt: 'DESC' },
+      order: { updatedAt: 'DESC' },
       relations: {
         user_ips: true,
       },
