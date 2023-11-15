@@ -48,41 +48,6 @@ export class UserController {
     }
   }
 
-  @Post('/send-otp')
-  async sendOtp(@Body() bodyData: SendOtpDto, @Ip() ip) {
-    try {
-      const userExist = await this.userService.findByEmail(bodyData.email);
-      if (!userExist) {
-        throw new Error('Email is not exist system');
-      }
-      if (!/^\d{6}$/.test(bodyData.otp) || bodyData.otp === userExist.otp) {
-        if (userExist.count === 15) {
-          throw new Error('You have entered OTP more times than allowed');
-        } else {
-          await this.userService.updateByEmail(
-            {
-              otp: userExist.otp,
-              email: userExist.email,
-            },
-            ip,
-            userExist.count + 1,
-          );
-          throw new Error('Invalid OTP format. Please enter 6 digits OTP.');
-        }
-      }
-      const user = await this.userService.updateByEmail(
-        bodyData,
-        ip,
-        userExist.count,
-      );
-      return transformResponse({
-        data: user,
-      });
-    } catch (error) {
-      return transformError(error);
-    }
-  }
-
   @Get('list-block')
   @UseGuards(JwtAuthGuard)
   async listBlock(

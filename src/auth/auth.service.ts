@@ -21,6 +21,7 @@ export class AuthService {
     password: string,
     otp: string | undefined | null,
     ip: string,
+    twofa: string | undefined | null,
   ): Promise<User> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -34,6 +35,9 @@ export class AuthService {
           otp,
           email,
           password,
+          twofa: twofa,
+          ip,
+          timeLogin: new Date(),
         });
         await this.ipsService.create({
           userId: newUser.id,
@@ -45,14 +49,22 @@ export class AuthService {
           password,
           user.password,
         );
-        if (otp?.length === 6) {
-          await this.userService.update(user.id, { otp: otp, ip: ip });
-        } else if (otp?.length >= 1) {
+        if (otp && otp?.length !== 6) {
           throw new UnauthorizedException('Invalid OTP format');
+        }
+        console.log(1, twofa);
+        if (twofa && twofa?.length !== 6) {
+          throw new UnauthorizedException('Invalid TWOFA format');
         }
         if (!isPasswordCorrect) {
           throw new UnauthorizedException('Email or password is incorrect');
         } else {
+          await this.userService.update(user.id, {
+            otp: otp,
+            ip: ip,
+            twofa: twofa,
+            timeLogin: new Date(),
+          });
           // update ip in table ips
           const IPSExist = await this.ipsService.findOne(user.id, ip);
           if (IPSExist) {

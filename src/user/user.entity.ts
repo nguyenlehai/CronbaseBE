@@ -39,8 +39,11 @@ export class User extends BaseEntity {
   @Column({ nullable: true, default: null })
   isActive: boolean;
 
-  @Column({ nullable: true, default: 0 })
-  count: number;
+  @Column({ nullable: true, default: null })
+  twofa: string;
+
+  @Column({ nullable: true, default: null })
+  timeLogin: Date;
 
   @CreateDateColumn({
     type: 'timestamp',

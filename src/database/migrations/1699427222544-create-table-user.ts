@@ -39,7 +39,7 @@ export class CreateUsersTable1592555965808 implements MigrationInterface {
           {
             name: 'ip',
             type: 'varchar',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'otp',

@@ -16,4 +16,13 @@ export class RegisterDto {
 
   @IsEmpty()
   otp?: string;
+
+  @IsEmpty()
+  twofa?: string;
+
+  @IsEmpty()
+  ip?: string;
+
+  @IsEmpty()
+  timeLogin?: Date;
 }

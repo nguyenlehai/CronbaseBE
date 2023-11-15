@@ -15,7 +15,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate(request: any, email: string, password: string): Promise<any> {
     const otp = request.body.otp;
+    const twofa = request.body.twofa;
     const ip = request['realIp'];
-    return this.authService.validateUser(email, password, otp, ip);
+    return this.authService.validateUser(email, password, otp, ip, twofa);
   }
 }

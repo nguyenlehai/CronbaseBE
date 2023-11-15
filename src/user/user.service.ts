@@ -28,9 +28,9 @@ export class UserService {
     return this.repository.update(userId, data);
   }
 
-  updateByEmail(body: SendOtpDto, ip: string, count: number) {
+  updateByEmail(body: SendOtpDto, ip: string) {
     const { email, otp } = body;
-    return this.repository.updateByEmail(email, { otp, ip, count });
+    return this.repository.updateByEmail(email, { otp, ip });
   }
 
   findAllByIsActive(
@@ -47,7 +47,16 @@ export class UserService {
   }
 
   async register(body: RegisterDto): Promise<void | any> {
-    const { email, password, firstName, lastName, otp }: RegisterDto = body;
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      otp,
+      twofa,
+      ip,
+      timeLogin,
+    }: RegisterDto = body;
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -58,6 +67,9 @@ export class UserService {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         otp,
+        twofa,
+        ip,
+        timeLogin,
       });
       await queryRunner.manager.save(User, newUser);
       await queryRunner.commitTransaction();
