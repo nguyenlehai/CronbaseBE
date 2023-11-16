@@ -4,22 +4,25 @@ import {
   Post,
   UseGuards,
   UnauthorizedException,
-  Ip,
   Get,
   Query,
   Put,
   Req,
   Request,
+  Param,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/auth.guard';
 import { UserService } from './user.service';
 import { transformError, transformResponse } from 'src/common/helpers';
 import { VerifyEmailDto } from './dto/VerifyEmailDto';
-import { SendOtpDto } from './dto/SendOtpDto';
 import { RegisterDto } from './dto/Register';
+import { IpsService } from 'src/ips/ips.service';
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private readonly ipsService: IpsService,
+  ) {}
 
   @Post('/register')
   async register(@Body() bodyData: RegisterDto) {
@@ -102,6 +105,32 @@ export class UserController {
       await this.userService.updateIsActiveUser(bodyData);
       return transformResponse({
         data: [],
+      });
+    } catch (error) {
+      return transformError(error);
+    }
+  }
+
+  @Post('status-ip')
+  async getStatusIpCurrent(
+    @Body() bodyData: { email: string },
+    @Req() req: Request,
+  ) {
+    try {
+      console.log(req['realIp']);
+      const { email } = bodyData;
+      const userExist = await this.userService.findByEmail(email);
+      const ipUserExist = await this.ipsService.findOne(
+        userExist.id,
+        req['realIp'],
+      );
+      const isBlockIP = !(ipUserExist.count <= 15);
+      const data = {
+        currentIP: req['realIp'],
+        isBlockIP: isBlockIP,
+      };
+      return transformResponse({
+        data,
       });
     } catch (error) {
       return transformError(error);
