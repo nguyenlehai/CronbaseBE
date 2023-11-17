@@ -20,6 +20,10 @@ export class IpsService {
     });
   }
 
+  findOneByData(data) {
+    return this.repository.findOne(data);
+  }
+
   async create(body: { name: string; userId: number }) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();

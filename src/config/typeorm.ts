@@ -10,9 +10,10 @@ const config = {
   username: `${process.env.DATABASE_USERNAME}`,
   password: `${process.env.DATABASE_PASSWORD}`,
   database: `${process.env.DATABASE_DB_NAME}`,
-  entities: ['dist/**/*.entity{.ts,.js}'],
-  migrations: ['dist/database/migrations/*{.ts,.js}'],
-  seeds: ['dist/database/seeds/*{.ts,.js}'],
+  // entities: ['src/**/*.entity{.ts,.js}'],
+  entities: ['**/*.entity{ .ts,.js}'],
+  migrations: ['**/migrations/*{ .ts,.js}'],
+  seeds: [__dirname + '**/seeds/*{ .ts,.js}'],
   autoLoadEntities: false,
   synchronize: false,
 };

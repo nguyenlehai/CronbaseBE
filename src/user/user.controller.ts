@@ -109,19 +109,18 @@ export class UserController {
     }
   }
 
-  @Post('status-ip')
-  async getStatusIpCurrent(
-    @Body() bodyData: { email: string },
-    @Req() req: Request,
-  ) {
+  @Get('status-ip')
+  async getStatusIpCurrent(@Req() req: Request) {
     try {
       console.log(req['realIp']);
-      const { email } = bodyData;
-      const userExist = await this.userService.findByEmail(email);
-      const ipUserExist = await this.ipsService.findOne(
-        userExist.id,
-        req['realIp'],
-      );
+      const ipUserExist = await this.ipsService.findOneByData({
+        where: {
+          name: req['realIp'],
+        },
+      });
+      if (!ipUserExist) {
+        throw new Error('The IP does not match the account in the system');
+      }
       const isBlockIP = !(ipUserExist.count <= 15);
       const data = {
         currentIP: req['realIp'],
