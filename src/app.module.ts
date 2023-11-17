@@ -13,6 +13,7 @@ import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { IpsModule } from './ips/ips.module';
 import { AppLoggerMiddleware } from './middlewares/logger';
+import { EventGateway } from './app.gateway';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -31,7 +32,7 @@ import { AppLoggerMiddleware } from './middlewares/logger';
     IpsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EventGateway],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
