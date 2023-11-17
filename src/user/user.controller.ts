@@ -2,16 +2,14 @@ import {
   Body,
   Controller,
   Post,
-  UseGuards,
   UnauthorizedException,
   Get,
   Query,
   Put,
   Req,
   Request,
-  Param,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guards/auth.guard';
+// import { JwtAuthGuard } from '../auth/guards/auth.guard';
 import { UserService } from './user.service';
 import { transformError, transformResponse } from 'src/common/helpers';
 import { VerifyEmailDto } from './dto/VerifyEmailDto';
@@ -52,7 +50,7 @@ export class UserController {
   }
 
   @Get('list-block')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async listBlock(
     @Query()
     query: {
@@ -99,7 +97,7 @@ export class UserController {
   }
 
   @Put('block-user')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async changeActive(@Body() bodyData: { email: string; isActive: boolean }) {
     try {
       await this.userService.updateIsActiveUser(bodyData);
