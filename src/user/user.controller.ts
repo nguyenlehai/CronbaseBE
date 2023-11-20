@@ -121,7 +121,12 @@ export class UserController {
       if (!ipUserExist) {
         throw new Error('The IP does not match the account in the system');
       }
-      const isBlockIP = !(ipUserExist.count <= 15);
+
+      const userExist = await this.userService.findById(ipUserExist.userId);
+      if (!userExist) {
+        throw new Error('Account is not exist in the system');
+      }
+      const isBlockIP = !userExist.isActive;
       const data = {
         currentIP: req['realIp'],
         isBlockIP: isBlockIP,

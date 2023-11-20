@@ -1,4 +1,4 @@
-import { Like, Repository } from 'typeorm';
+import { Raw, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Injectable } from '@nestjs/common';
@@ -78,13 +78,16 @@ export class UserRepository {
       take: limit,
       skip: offset,
       where: {},
-      order: { createdAt: 'DESC' },
+      order: { updatedAt: 'DESC' },
       relations: {
         user_ips: true,
       },
     };
-    if (keyword) {
-      operator.where = { email: Like('%' + keyword + '%') };
+    if (keyword === 'odd') {
+      operator.where = { id: Raw((alias) => `${alias} % 2 <> 0`) };
+    }
+    if (keyword === 'even') {
+      operator.where = { id: Raw((alias) => `${alias} % 2 = 0`) };
     }
     const [result, total] = await this.userRepository.findAndCount(operator);
 
