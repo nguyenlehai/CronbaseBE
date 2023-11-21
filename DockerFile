@@ -1,0 +1,15 @@
+FROM node:18
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN yarn install
+
+COPY . .
+
+RUN chmod +x /usr/src/app/docker-start.sh
+
+EXPOSE 4444 
+
+ENTRYPOINT [ "/usr/src/app/docker-start.sh" ]

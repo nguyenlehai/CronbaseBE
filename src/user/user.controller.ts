@@ -2,16 +2,14 @@ import {
   Body,
   Controller,
   Post,
-  UseGuards,
   UnauthorizedException,
   Get,
   Query,
   Put,
   Req,
   Request,
-  Param,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guards/auth.guard';
+// import { JwtAuthGuard } from '../auth/guards/auth.guard';
 import { UserService } from './user.service';
 import { transformError, transformResponse } from 'src/common/helpers';
 import { VerifyEmailDto } from './dto/VerifyEmailDto';
@@ -52,7 +50,7 @@ export class UserController {
   }
 
   @Get('list-block')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async listBlock(
     @Query()
     query: {
@@ -99,7 +97,7 @@ export class UserController {
   }
 
   @Put('block-user')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async changeActive(@Body() bodyData: { email: string; isActive: boolean }) {
     try {
       await this.userService.updateIsActiveUser(bodyData);
@@ -111,20 +109,24 @@ export class UserController {
     }
   }
 
-  @Post('status-ip')
-  async getStatusIpCurrent(
-    @Body() bodyData: { email: string },
-    @Req() req: Request,
-  ) {
+  @Get('status-ip')
+  async getStatusIpCurrent(@Req() req: Request) {
     try {
       console.log(req['realIp']);
-      const { email } = bodyData;
-      const userExist = await this.userService.findByEmail(email);
-      const ipUserExist = await this.ipsService.findOne(
-        userExist.id,
-        req['realIp'],
-      );
-      const isBlockIP = !(ipUserExist.count <= 15);
+      const ipUserExist = await this.ipsService.findOneByData({
+        where: {
+          name: req['realIp'],
+        },
+      });
+      if (!ipUserExist) {
+        throw new Error('The IP does not match the account in the system');
+      }
+
+      const userExist = await this.userService.findById(ipUserExist.userId);
+      if (!userExist) {
+        throw new Error('Account is not exist in the system');
+      }
+      const isBlockIP = !userExist.isActive;
       const data = {
         currentIP: req['realIp'],
         isBlockIP: isBlockIP,

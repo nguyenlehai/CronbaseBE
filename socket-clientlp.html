@@ -6,7 +6,7 @@
     <title>WebSocket Client</title>
   </head>
   <body>
-    <h1>WebSocket Client CMS</h1>
+    <h1>WebSocket Client Landing Page</h1>
     <div id="status">Connecting...</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
@@ -16,24 +16,23 @@
 
         const socket = io('https://api.crobase2.net/'); // Thay đổi URL nếu cần
 
-        socket.on('connect', () => {
-          statusElement.textContent = 'Connected';
-          console.log('Connected to WebSocket server');
-        });
+        // socket.on('connect', () => {
+        //   statusElement.textContent = 'Connected';
+        //   console.log('Connected to WebSocket server');
+        // });
 
-        socket.on('disconnect', () => {
-          statusElement.textContent = 'Disconnected';
-          console.log('Disconnected from WebSocket server');
-        });
+        // socket.on('disconnect', () => {
+        //   statusElement.textContent = 'Disconnected';
+        //   console.log('Disconnected from WebSocket server');
+        // });
 
         // Gửi sự kiện 'joinRoom' với userId là 'exampleUserId'
         socket.emit('joinRoom', { email: 'ptd@gmail.com' });
 
         // Lắng nghe sự kiện từ server
-        socket.emit('message', { data: '' });
-        // socket.on('message', (data) => {
-        //   console.log('Received data from server:', data);
-        // });
+        socket.on('message', (data) => {
+          console.log('Received data from server:', data);
+        });
       });
     </script>
   </body>
