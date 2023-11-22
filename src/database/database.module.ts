@@ -11,7 +11,7 @@ dotenvConfig({ path: '.env' });
       port: 3306,
       username: 'root',
       password: '123456',
-      database: 'tutorial-authentication',
+      database: 'tutorial_authentication',
       synchronize: true,
       autoLoadEntities: false,
       entities: ['dist/src/**/*.entity{.ts,.js}', 'src/**/*.entity{.ts,.js}'],

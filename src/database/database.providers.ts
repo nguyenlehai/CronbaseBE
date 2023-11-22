@@ -10,7 +10,7 @@ export const databaseProviders = [
         port: 3306,
         username: 'root',
         password: '123456',
-        database: 'tutorial-authentication',
+        database: 'tutorial_authentication',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
       });
