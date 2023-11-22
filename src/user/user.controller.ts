@@ -112,8 +112,7 @@ export class UserController {
   @Get('status-ip')
   async getStatusIpCurrent(@Req() req: Request) {
     try {
-      console.log(req['realIp']);
-      const ipUserExist = await this.ipsService.findOneByData({
+      const ipUserExist = await this.ipsService.findAllByData({
         where: {
           name: req['realIp'],
         },
