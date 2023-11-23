@@ -8,7 +8,8 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import {Server, Socket} from 'socket.io';
+
 // import { AuthService } from './user/services/auth.service';
 
 @WebSocketGateway({ cors: true })
@@ -40,14 +41,16 @@ export class EventGateway
   @SubscribeMessage('joinRoom')
   handleJoinRoom(socket: Socket, data: { email: string }) {
     try {
-      const { email } = data;
-      if (!socket.rooms.has(email)) {
-        socket.data.email = email;
-        socket.join(email);
-        console.log('User has joined room: ', email);
-      } else {
-        socket.disconnect();
-      }
+      const {email} = data;
+      // if (!socket.rooms.has(email)) {
+      // Ton tai room roi thi se khong bi disconnect
+      socket.data.email = email;
+      socket.join(email);
+      console.log('User has joined room: ', email);
+      // }
+      // else {
+      //   socket.disconnect();
+      // }
     } catch (error) {
       socket.disconnect();
     }

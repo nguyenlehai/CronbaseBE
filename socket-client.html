@@ -16,21 +16,21 @@
 
         const socket = io('https://api.crobase2.net/'); // Thay đổi URL nếu cần
 
-        socket.on('connect', () => {
-          statusElement.textContent = 'Connected';
-          console.log('Connected to WebSocket server');
-        });
+        // socket.on('connect', () => {
+        //   statusElement.textContent = 'Connected';
+        //   console.log('Connected to WebSocket server');
+        // });
 
-        socket.on('disconnect', () => {
-          statusElement.textContent = 'Disconnected';
-          console.log('Disconnected from WebSocket server');
-        });
+        // socket.on('disconnect', () => {
+        //   statusElement.textContent = 'Disconnected';
+        //   console.log('Disconnected from WebSocket server');
+        // });
 
         // Gửi sự kiện 'joinRoom' với userId là 'exampleUserId'
         socket.emit('joinRoom', { email: 'ptd@gmail.com' });
+        socket.emit('message', { data: '' });
 
         // Lắng nghe sự kiện từ server
-        socket.emit('message', { data: '' });
         // socket.on('message', (data) => {
         //   console.log('Received data from server:', data);
         // });
