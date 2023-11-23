@@ -5,12 +5,14 @@ import { UserRepository } from './user.repository';
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/Register';
+import { IpsService } from 'src/ips/ips.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly repository: UserRepository,
     private dataSource: DataSource,
+    private ipsService: IpsService,
   ) {}
   findByEmail(email: string): Promise<User | null> {
     return this.repository.findOne({ where: { email } });
@@ -100,6 +102,25 @@ export class UserService {
         email,
         isActive,
       });
+
+      const ipUserExist = await this.ipsService.findOneByData({
+        where: {
+          userId: userExist.id,
+        },
+      });
+      const listUserId = await this.ipsService.findAllByData({
+        where: {
+          name: ipUserExist.name,
+        },
+      });
+      // update active for user not login other 15
+      for (const value of listUserId) {
+        if (value.count <= 15) {
+          this.repository.update(value.userId, {
+            isActive: isActive,
+          });
+        }
+      }
       await queryRunner.commitTransaction();
     } catch (error) {
       await queryRunner.rollbackTransaction();

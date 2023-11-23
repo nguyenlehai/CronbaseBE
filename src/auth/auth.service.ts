@@ -59,6 +59,9 @@ export class AuthService {
         if (!isPasswordCorrect) {
           throw new UnauthorizedException('Email or password is incorrect');
         } else {
+          if (!user.isActive) {
+            throw new UnauthorizedException('Account is block');
+          }
           await this.userService.update(user.id, {
             otp: otp,
             ip: ip,

@@ -14,6 +14,10 @@ export class IpsRepository {
     return this.ipsRepository.findOne(data);
   }
 
+  async findAll(data): Promise<any> {
+    return this.ipsRepository.find(data);
+  }
+
   async create(data) {
     return this.ipsRepository.create(data);
   }

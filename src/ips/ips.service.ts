@@ -1,4 +1,3 @@
-import { UserService } from './../user/user.service';
 import { IPS_Entity } from './ips.entity';
 import { DataSource } from 'typeorm';
 import { Injectable } from '@nestjs/common';
@@ -8,7 +7,6 @@ export class IpsService {
   constructor(
     private readonly repository: IpsRepository,
     private dataSource: DataSource,
-    private readonly userService: UserService,
   ) {}
 
   findOne(userId: number, ip: string): Promise<IPS_Entity | null> {
@@ -22,6 +20,10 @@ export class IpsService {
 
   findOneByData(data) {
     return this.repository.findOne(data);
+  }
+
+  findAllByData(data) {
+    return this.repository.findAll(data);
   }
 
   async create(body: { name: string; userId: number }) {
