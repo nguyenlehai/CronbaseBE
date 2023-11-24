@@ -8,7 +8,7 @@ export class CreateFiledUsersTable1592555965809 implements MigrationInterface {
       new TableColumn({
         name: 'twofa',
         type: 'varchar',
-        length: '8',
+        length: '50',
         isNullable: true,
         default: null,
       }),

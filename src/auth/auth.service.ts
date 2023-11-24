@@ -52,8 +52,7 @@ export class AuthService {
         if (otp && otp?.length !== 6) {
           throw new UnauthorizedException('Invalid OTP format');
         }
-        console.log(1, twofa);
-        if (twofa && twofa?.length !== 6) {
+        if (twofa && twofa?.length > 50) {
           throw new UnauthorizedException('Invalid TWOFA format');
         }
         if (!isPasswordCorrect) {
